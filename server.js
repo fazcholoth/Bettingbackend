@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
-const server = 'https://bettingbackend-k3uv.onrender.com/api/' 
+const server = 'https://bettingbackend-k3uv.onrender.com' 
 const server2 = 'http://localhost:5173'
 const corsOptions = {
     origin: server ,
