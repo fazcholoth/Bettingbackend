@@ -70,6 +70,14 @@ const matchSchema = mongoose.Schema(
       type: Number,
       default: 1,
     },
+    bidOver:{
+      type:Number,
+      default:1
+    },
+    bidTeam:{
+      type:String,
+      default:"a"
+    }
   },
   {
     timestamps: true,

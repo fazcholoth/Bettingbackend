@@ -1,6 +1,8 @@
 import asyncHandler from "express-async-handler";
 import Matches from "../models/matchModel.js";
+import Bidding from "../models/biddingModel.js";
 import axios from "axios";
+import User from "../models/userModel.js";
 
 const project_key = "RS_P_1744661780011028485";
 const token = "v5sRS_P_1744661780011028485s13048140061676323969";
@@ -270,6 +272,112 @@ const findOverstausByNumber = asyncHandler(async (req, res) => {
   res.status(200).json({ data: "hai" });
 });
 
+const placeBidding = asyncHandler(async (req, res) => {
+  
+  const match_key = req.params.key;
+
+  const {over,ball,option,amount}= req.body
+
+  const Bid = new Bidding({
+    matchkey:match_key,
+    ball:[over,ball],
+    Option: option,
+    userId:req.user,
+    amount:amount,
+  })
+
+  const Bidding = await Bidding.save();
+  // console.log(matches);
+  res.status(200).json(Bidding);
+});
+
+const UpdateBidding = asyncHandler(async (req, res) => {
+  let overkey;
+  // const match_key = req.params.key;
+  const match_key = "a-rz--cricket--K51746068628605947926";
+
+  const matchnow = await Matches.findOne({ key: match_key });
+
+  // console.log(matchnow);
+
+  var updatedMatch = null;
+
+  if (
+    (matchnow?.bidover == 20 && matchnow?.format == "t20") ||
+    matchnow?.over == 50
+  ) {
+    updatedMatch = await Matches.findOneAndUpdate(
+      { key: match_key },
+      {
+        $set: {
+          bidover: 1,
+          bidteam: "b",
+        },
+      },
+      { new: true }
+    );
+
+    console.log(updatedMatch);
+  }
+
+  const biddings = await Bidding.find({matchkey:match_key,ball:[matchnow.bidover],bidteam:matchnow.bidteam})
+
+  const predict_over = matchnow.teams.a.score[matchnow.bidover]
+
+  for (let i = 0; i < predict_over.length; i++) {
+
+    for (let j = 0; j < biddings.length; j++) {
+      if (biddings[i].option=="isFour"&&predict_over[i].isFour==true) {
+        const update = await Bidding.findOneAndUpdate({ key: biddings[i].key },{ $set: { status: 'won' } });
+        const balance = await User.findOneAndUpdate({ _id:biddings[i].userId },{ $inc: { balance: biddings[i].amount } },{ new: true }); 
+      } else if (biddings[i].option=="isSix"&&predict_over[i].isSix==true) {
+        const update = await Bidding.findOneAndUpdate({ key: biddings[i].key },{ $set: { status: 'won' } });
+        const balance = await User.findOneAndUpdate({ _id:biddings[i].userId },{ $inc: { balance: biddings[i].amount } },{ new: true });
+      } else if (biddings[i].option=="isWicket"&&predict_over[i].isWicket==true) {
+        const update = await Bidding.findOneAndUpdate({ key: biddings[i].key },{ $set: { status: 'won' } });
+        const balance = await User.findOneAndUpdate({ _id:biddings[i].userId },{ $inc: { balance: biddings[i].amount } },{ new: true });
+      }else if (biddings[i].option=="isSix"&&predict_over[i].isSix==true) {
+        const update = await Bidding.findOneAndUpdate({ key: biddings[i].key },{ $set: { status: 'won' } });
+        const balance = await User.findOneAndUpdate({ _id:biddings[i].userId },{ $inc: { balance: biddings[i].amount } },{ new: true });
+      } else if (biddings[i].option=="isDotball"&&predict_over[i].isDotball==true) {
+        const update = await Bidding.findOneAndUpdate({ key: biddings[i].key },{ $set: { status: 'won' } });
+        const balance = await User.findOneAndUpdate({ _id:biddings[i].userId },{ $inc: { balance: biddings[i].amount } },{ new: true });
+      } else {
+        const update = await Bidding.findOneAndUpdate({ key: biddings[i].key },{ $set: { status: 'loss' } });
+        const balance = await User.findOneAndUpdate({ _id:biddings[i].userId },{ $inc: { balance: -biddings[i].amount } },{ new: true });
+      }
+      
+    }
+  }
+
+  const eachUpdate = await Matches.findOneAndUpdate({key:match_key},{$set:{bidover:matchnow.bidover+1}})
+
+  //  console.log(ballupdate.index.over_number+1);
+
+  res.status(200).json({ data: "hai" });
+});
+
+const fiveOvers = asyncHandler(async (req, res) => {
+
+  const {key,team,from}=req.params
+
+  const start = parseInt(from)
+
+  const match = await Matches.findOne({key:key});
+
+  const teamScore = match.teams[team].score;
+  
+  // console.log(teamScore);
+
+  const slicedOuterArray = teamScore.slice(start,start+4);
+
+  console.log(slicedOuterArray);
+
+  res.status(200).json({score:slicedOuterArray});
+});
+
+
+
 export {
   addMatchtoFeatured,
   findAssociations,
@@ -277,5 +385,7 @@ export {
   findTournamentsbyAssociation,
   getMatches,
   findOverstausByNumber,
-  findMatch
+  findMatch,
+  placeBidding,
+  fiveOvers
 };
