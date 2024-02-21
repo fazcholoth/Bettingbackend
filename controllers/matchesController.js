@@ -13,68 +13,78 @@ const getMatches = asyncHandler(async (req, res) => {
   res.status(200).json(matches);
 });
 
+const getMatchesbyFormat = asyncHandler(async (req, res) => {
+  const format = req.params.format;
+
+  console.log(format);
+  const matches = await Matches.find({format:format});
+  // console.log(matches);
+  res.status(200).json(matches);
+
+});
+
 const findMatch = asyncHandler(async (req, res) => {
 
-  const match_key = req.params.key;
+  // const match_key = req.params.key;
 
-  const match = await Matches.findOne({key:match_key});
-  let section1
-  let section2
+  // const match = await Matches.findOne({key:match_key});
+  // let section1
+  // let section2
 
-  const score1= match.teams.a.score
-  const score2= match.teams.b.score
+  // const score1= match.teams.a.score
+  // const score2= match.teams.b.score
   
-   if (match.format=="t20") {
-     console.log(match.format);
-    section1 = [
-      { id: 1, title: "team1 Overs 1", data: [score1[0], score1[2], score1[3], score1[3], score1[4]],},
-      { id: 2, title: "team1 Overs 2", data: [score1[5], score1[6], score1[7], score1[8], score1[9]] },
-      { id: 3, title: "ream1 Overs 3", data: [score1[10], score1[11], score1[12], score1[13], score1[14]]},
-      { id: 4, title: "team1 Overs 4", data: [score1[15], score1[16], score1[17], score1[18], score1[19]]},
-    ]
+  //  if (match.format=="t20") {
+  //    console.log(match.format);
+  //   section1 = [
+  //     { id: 1, title: "team1 Overs 1", data: [score1[0], score1[2], score1[3], score1[3], score1[4]],},
+  //     { id: 2, title: "team1 Overs 2", data: [score1[5], score1[6], score1[7], score1[8], score1[9]] },
+  //     { id: 3, title: "ream1 Overs 3", data: [score1[10], score1[11], score1[12], score1[13], score1[14]]},
+  //     { id: 4, title: "team1 Overs 4", data: [score1[15], score1[16], score1[17], score1[18], score1[19]]},
+  //   ]
 
-    section2 = [
-      { id: 5, title: "team2 Overs 1", data: [score2[0], score2[2], score2[3], score2[3], score2[4]],},
-      { id: 6, title: "team2 Overs 2", data: [score2[5], score2[6], score2[7], score2[8], score2[9]] },
-      { id: 7, title: "team2 Overs 3", data: [score2[10], score2[11], score2[12], score2[13], score2[14]]},
-      { id: 8, title: "team2 Overs 4", data: [score2[15], score2[16], score2[17], score2[18], score2[19]]},
-    ]
+  //   section2 = [
+  //     { id: 5, title: "team2 Overs 1", data: [score2[0], score2[2], score2[3], score2[3], score2[4]],},
+  //     { id: 6, title: "team2 Overs 2", data: [score2[5], score2[6], score2[7], score2[8], score2[9]] },
+  //     { id: 7, title: "team2 Overs 3", data: [score2[10], score2[11], score2[12], score2[13], score2[14]]},
+  //     { id: 8, title: "team2 Overs 4", data: [score2[15], score2[16], score2[17], score2[18], score2[19]]},
+  //   ]
 
     
-   }else{
+  //  }else{
 
 
-    section1 = [
-      { id: 1, title: "Five Overs 1", data: [score2[0], score2[2], score2[3], score2[3], score2[4]],},
-      { id: 2, title: "Five Overs 2", data: [score2[5], score2[6], score2[7], score2[8], score2[9]] },
-      { id: 3, title: "Five Overs 3", data: [score2[10], score2[11], score2[12], score2[13], score2[14]]},
-      { id: 4, title: "Five Overs 4", data: [score1[15], score1[16], score1[17], score1[18], score1[19]]},
-      { id: 5, title: "Five Overs 1", data: [score1[20], score1[21], score1[22], score1[23], score1[24]]},
-      { id: 6, title: "Five Overs 2", data: [score1[25], score1[26], score1[27], score1[28], score1[29]]},
-      { id: 7, title: "Five Overs 3", data: [score1[30], score1[31], score1[32], score1[33], score1[34]]},
-      { id: 8, title: "Five Overs 4", data: [score1[35], score1[36], score1[37], score1[38], score1[39]]},
-      { id: 9, title: "Five Overs 4", data: [score1[40], score1[41], score1[42], score1[43], score1[44]]},
-      { id: 10, title: "Five Overs 4",data: [score1[45], score1[46], score1[47], score1[48], score1[49]]},
-    ];
+  //   section1 = [
+  //     { id: 1, title: "Five Overs 1", data: [score2[0], score2[2], score2[3], score2[3], score2[4]],},
+  //     { id: 2, title: "Five Overs 2", data: [score2[5], score2[6], score2[7], score2[8], score2[9]] },
+  //     { id: 3, title: "Five Overs 3", data: [score2[10], score2[11], score2[12], score2[13], score2[14]]},
+  //     { id: 4, title: "Five Overs 4", data: [score1[15], score1[16], score1[17], score1[18], score1[19]]},
+  //     { id: 5, title: "Five Overs 1", data: [score1[20], score1[21], score1[22], score1[23], score1[24]]},
+  //     { id: 6, title: "Five Overs 2", data: [score1[25], score1[26], score1[27], score1[28], score1[29]]},
+  //     { id: 7, title: "Five Overs 3", data: [score1[30], score1[31], score1[32], score1[33], score1[34]]},
+  //     { id: 8, title: "Five Overs 4", data: [score1[35], score1[36], score1[37], score1[38], score1[39]]},
+  //     { id: 9, title: "Five Overs 4", data: [score1[40], score1[41], score1[42], score1[43], score1[44]]},
+  //     { id: 10, title: "Five Overs 4",data: [score1[45], score1[46], score1[47], score1[48], score1[49]]},
+  //   ];
   
-    section2 = [
-      { id: 11, title: "Five Overs 1", data: [score2[0], score2[2], score2[3], score2[3], score2[4]],},
-      { id: 12, title: "Five Overs 2", data: [score2[5], score2[6], score2[7], score2[8], score2[9]] },
-      { id: 13, title: "Five Overs 3", data: [score2[10], score2[11], score2[12], score2[13], score2[14]]},
-      { id: 14, title: "Five Overs 4", data: [score1[15], score1[16], score1[17], score1[18], score1[19]]},
-      { id: 15, title: "Five Overs 1", data: [score1[20], score1[21], score1[22], score1[23], score1[24]]},
-      { id: 16, title: "Five Overs 2", data: [score1[25], score1[26], score1[27], score1[28], score1[29]]},
-      { id: 17, title: "Five Overs 3", data: [score1[30], score1[31], score1[32], score1[33], score1[34]]},
-      { id: 18, title: "Five Overs 4", data: [score1[35], score1[36], score1[37], score1[38], score1[39]]},
-      { id: 19, title: "Five Overs 4", data: [score1[40], score1[41], score1[42], score1[43], score1[44]]},
-      { id: 20, title: "Five Overs 4", data: [score1[45], score1[46], score1[47], score1[48], score1[49]]},
-    ];
+  //   section2 = [
+  //     { id: 11, title: "Five Overs 1", data: [score2[0], score2[2], score2[3], score2[3], score2[4]],},
+  //     { id: 12, title: "Five Overs 2", data: [score2[5], score2[6], score2[7], score2[8], score2[9]] },
+  //     { id: 13, title: "Five Overs 3", data: [score2[10], score2[11], score2[12], score2[13], score2[14]]},
+  //     { id: 14, title: "Five Overs 4", data: [score1[15], score1[16], score1[17], score1[18], score1[19]]},
+  //     { id: 15, title: "Five Overs 1", data: [score1[20], score1[21], score1[22], score1[23], score1[24]]},
+  //     { id: 16, title: "Five Overs 2", data: [score1[25], score1[26], score1[27], score1[28], score1[29]]},
+  //     { id: 17, title: "Five Overs 3", data: [score1[30], score1[31], score1[32], score1[33], score1[34]]},
+  //     { id: 18, title: "Five Overs 4", data: [score1[35], score1[36], score1[37], score1[38], score1[39]]},
+  //     { id: 19, title: "Five Overs 4", data: [score1[40], score1[41], score1[42], score1[43], score1[44]]},
+  //     { id: 20, title: "Five Overs 4", data: [score1[45], score1[46], score1[47], score1[48], score1[49]]},
+  //   ];
 
-   }
+  //  }
   
 
-  console.log(match);
-  res.status(200).json({match,section1:section1,section2:section2});
+  // console.log(match);
+  res.status(200).json({section1:section1,section2:section2});
 });
 
 
@@ -276,18 +286,17 @@ const placeBidding = asyncHandler(async (req, res) => {
   
   const match_key = req.params.key;
 
-  const {over,ball,option,amount}= req.body
+  const {bidover,bidball,bidoption,bidprice}= req.body
 
   const Bid = new Bidding({
     matchkey:match_key,
-    ball:[over,ball],
-    Option: option,
+    ball:[bidover,bidball],
+    Option: bidoption,
     userId:req.user,
-    amount:amount,
+    amount:bidprice,
   })
-
-  const Bidding = await Bidding.save();
-  // console.log(matches);
+  const Bidd = await Bid.save();
+  console.log(Bidd);
   res.status(200).json(Bidding);
 });
 
@@ -357,23 +366,24 @@ const UpdateBidding = asyncHandler(async (req, res) => {
   res.status(200).json({ data: "hai" });
 });
 
-const fiveOvers = asyncHandler(async (req, res) => {
+const allOvers = asyncHandler(async (req, res) => {
 
-  const {key,team,from}=req.params
+  // const {key,team,from}=req.params
+  const {key}=req.params
 
-  const start = parseInt(from)
+  // const start = parseInt(from)
 
   const match = await Matches.findOne({key:key});
 
-  const teamScore = match.teams[team].score;
+  // const teamScore = match.teams[team].score;
   
   // console.log(teamScore);
 
-  const slicedOuterArray = teamScore.slice(start,start+4);
+  // const slicedOuterArray = teamScore.slice(start,start+4);
 
-  console.log(slicedOuterArray);
+  // console.log(slicedOuterArray);
 
-  res.status(200).json({score:slicedOuterArray});
+  res.status(200).json({scorea:match.teams.a.score.slice(0,10),scoreb:match.teams.b.score.slice(0,10)});
 });
 
 
@@ -387,5 +397,6 @@ export {
   findOverstausByNumber,
   findMatch,
   placeBidding,
-  fiveOvers
+  allOvers,
+  getMatchesbyFormat
 };
